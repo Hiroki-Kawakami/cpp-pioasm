@@ -200,7 +200,9 @@ protected:
     static constexpr symbols::opt opt{};
 
     void origin(uint16_t value) {
+#if !PICO_NO_HARDWARE
         gen.program.origin = value;
+#endif
     }
     void side_set(uint8_t size) {
         gen.side_set = size;
