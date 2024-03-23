@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <map>
 #include <memory>
-#include <optional>
 #include <string>
 #include <vector>
 #if !PICO_NO_HARDWARE
@@ -90,7 +89,7 @@ private:
                 instructions[jmp.first] += ctx->jmp_table[jmp.second];
             }
         }
-        if (gen.wrap == 0) gen.wrap = static_cast<uint>(instructions.size() - 1);
+        if (gen.wrap == 0) wrap();
         delete ctx;
     }
 
@@ -220,16 +219,20 @@ protected:
         gen.side_set_pindirs = true;
     }
     void wrap_target() {
-        gen.wrap_target = static_cast<uint>(instructions.size());
+        gen.wrap_target = offset();
     }
     void wrap() {
-        gen.wrap = static_cast<uint>(instructions.size() - 1);
+        gen.wrap = offset() - 1;
     }
     void word(uint16_t value) {
         instructions.push_back(value);
     }
-    void label(std::string label) {
-        ctx->jmp_table.emplace(label, instructions.size());
+    uint8_t label(std::string label) {
+        ctx->jmp_table.emplace(label, offset());
+        return offset();
+    }
+    uint8_t offset() {
+        return static_cast<uint8_t>(instructions.size());
     }
 
     struct jmp_condition : asm_param<5, 3> {

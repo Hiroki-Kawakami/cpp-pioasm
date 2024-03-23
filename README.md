@@ -38,7 +38,8 @@ Simply place the `pioasm.hpp` file into your project directory and `#include` it
 
 ### Labels
 
-Within the `code()` function, include `label(<symbol>);` where `<symbol>` can be any `std::string` value.
+Within the `code()` function, include `label(<symbol>);` where `<symbol>` can be any `std::string` value.  
+Due to memory management, cpp-pioasm does not provide a way to obtain offset later using a label name like `PUBLIC`. Instead, use a member variable to store the return value of `label(std::string)`.
 
 ### Pseudoinstructions
 
